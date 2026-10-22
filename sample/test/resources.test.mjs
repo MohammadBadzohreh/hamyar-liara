@@ -1,0 +1,22 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { ResourceScenario } from "../src/resource-scenario.mjs";
+test("resource demo reuses 50 MiB, rate limits and ends automatically", (t) => {
+  t.mock.timers.enable({ apis: ["Date", "setTimeout"], now: 10000 });
+  const scenario = new ResourceScenario();
+  assert.equal(scenario.start().expiresAt, 70000);
+  assert.equal(scenario.run(), true);
+  const memory = scenario.memory;
+  assert.equal(memory.length, 50 * 1024 * 1024);
+  assert.equal(memory[0], 1);
+  assert.equal(memory.at(-1), 1);
+  assert.equal(scenario.run(), false);
+  t.mock.timers.tick(1000);
+  assert.equal(scenario.run(), true);
+  assert.equal(scenario.memory, memory);
+  t.mock.timers.tick(59000);
+  assert.equal(scenario.memory, null);
+  assert.equal(scenario.expiresAt, 0);
+  assert.equal(scenario.run(), true);
+  assert.equal(scenario.memory, null);
+});
