@@ -23,7 +23,7 @@ test('cost ambiguity and changed quotes prevent purchases; SSL requires project 
     calls.push({ path: u.pathname, method: init.method, body: init.body && JSON.parse(init.body) });
     if (u.pathname === '/v1/me') return Response.json({ plans: {
       projects: { small: { available: true, price: 10, RAM: 512, CPU: 0.5 } },
-      projectBundlePlans: { small: { base: { available: true, displayPrice: 720 } } },
+      projectBundlePlans: { small: { base: { available: true, price: 1, displayPrice: 720 } } },
     } });
     if (u.pathname === '/v1/billing') return Response.json({ team: { balance: 100000 } });
     if (u.pathname === '/v1/domains' && init.method === 'GET') return Response.json({ domains: [{ _id: 'domain-id', project: domainProject }] });

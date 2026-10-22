@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { hourlyWithTax } from "./pricing.ts";
 import { z } from "zod";
 import { createPatch } from "diff";
 import { store, type Project, type Operation } from "./store.ts";
@@ -98,6 +99,7 @@ export function normalizePlans(plans: any) {
             cpu: p.CPU,
             disk: p.volume,
             resourceHourly: p.price,
+            bundleHourly: b.price,
             bundleMonthly: b.displayPrice,
             retentionDays: b.maxLogsRetention,
             verified: process.env.LIARA_PRICE_SCHEMA_VERIFIED === "true",
@@ -126,13 +128,13 @@ async function quote(planID: string, bundlePlanID: string) {
     throw new Error("فیلد موجودی معتبر و مثبت هنوز تأیید نشده است.");
   if (
     !Number.isFinite(plan.resourceHourly) || plan.resourceHourly < 0 ||
-    !Number.isFinite(plan.bundleMonthly) || plan.bundleMonthly < 0
+    !Number.isFinite(plan.bundleHourly) || plan.bundleHourly < 0
   )
     throw new Error("قیمت معتبر نیست.");
   const taxValue=process.env.LIARA_TAX_RATE;
   const taxRate=Number(taxValue);
   if(!taxValue||!Number.isFinite(taxRate)||taxRate<0||taxRate>1)throw new Error('نرخ مالیات حساب هنوز تأیید نشده است.');
-  const hourly = (plan.resourceHourly + plan.bundleMonthly / 720)*(1+taxRate);
+  const hourly = hourlyWithTax(plan.resourceHourly, plan.bundleHourly, taxRate);
   return {
     plan,
     hourly,

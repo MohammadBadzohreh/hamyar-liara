@@ -21,14 +21,14 @@ export function recommendPlan(inspection: any, choices: any[]) {
         c.verified &&
         Number.isFinite(c.resourceHourly) &&
         c.resourceHourly >= 0 &&
-        Number.isFinite(c.bundleMonthly) &&
-        c.bundleMonthly >= 0,
+        Number.isFinite(c.bundleHourly) &&
+        c.bundleHourly >= 0,
     )
     .sort(
       (a, b) =>
         a.resourceHourly +
-        a.bundleMonthly / 720 -
-        (b.resourceHourly + b.bundleMonthly / 720),
+        a.bundleHourly -
+        (b.resourceHourly + b.bundleHourly),
     );
   if (!ranked.length)
     return {

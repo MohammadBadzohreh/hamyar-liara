@@ -87,7 +87,7 @@ test("resource recommendations do not invent prices or capacity", () => {
   assert.equal(recommendPlan(null, []).available, false);
   assert.equal(
     recommendPlan({ dependencies: [] }, [
-      { resourceHourly: 1, bundleMonthly: 0, verified: false },
+      { resourceHourly: 1, bundleHourly: 0, verified: false },
     ]).available,
     false,
   );
@@ -96,14 +96,14 @@ test("resource recommendations do not invent prices or capacity", () => {
       planID: "large",
       bundlePlanID: "base",
       resourceHourly: 2,
-      bundleMonthly: 0,
+      bundleHourly: 0,
       verified: true,
     },
     {
       planID: "small",
       bundlePlanID: "base",
       resourceHourly: 1,
-      bundleMonthly: 0,
+      bundleHourly: 0,
       verified: true,
     },
   ];
