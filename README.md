@@ -9,11 +9,15 @@
 نیازمند Node.js 24 و npm:
 
 ```sh
+git clone https://github.com/MohammadBadzohreh/hamyar-liara.git
+cd hamyar-liara
 npm ci
 npm run setup
 npm run build
 npm start
 ```
+
+مخزن تحویل فعلاً خصوصی است؛ برای clone و ارزیابی، دسترسی GitHub مالک یا داور لازم است. کلیدهای سرویس و داده‌های حساب در مخزن قرار ندارند.
 
 آدرس: http://127.0.0.1:3000 . رمز مالک در `.local/owner-login.txt` ساخته می‌شود؛ در چت و خروجی terminal چاپ نمی‌شود. `setup` فایل `.env` موجود را بازنویسی نمی‌کند. برای توسعه، `npm run dev` و `npm run dev:ui` را در دو ترمینال اجرا کنید.
 

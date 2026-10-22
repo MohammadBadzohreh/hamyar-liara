@@ -24,7 +24,7 @@ PaaS base برابر `https://api.liara.ir` است. Bearer token و query صری
 | دامنه | POST `/v1/domains`؛ name، project، type=PROJECT |
 | SSL | POST `/v1/domains/provision-ssl-certs`؛ domain با تطبیق مالکیت |
 
-منابع: [انتشار](https://developers.liara.ir/pass/deploy/deploy-releases)، [سورس](https://developers.liara.ir/pass/deploy/deploy-sources-code)، [env](https://developers.liara.ir/pass/settings/update-envs)، [دامنه](https://developers.liara.ir/pass/domains/create-a-domain)، [حساب](https://docs.liara.ir/references/api/get-info/)، [مالی](https://docs.liara.ir/references/api/billing/). فایل‌های OpenAPI و CLI در پوشه‌های api و reference موجودند.
+منابع: [انتشار](https://developers.liara.ir/pass/deploy/deploy-releases)، [سورس](https://developers.liara.ir/pass/deploy/deploy-sources-code)، [env](https://developers.liara.ir/pass/settings/update-envs)، [دامنه](https://developers.liara.ir/pass/domains/create-a-domain)، [حساب](https://docs.liara.ir/references/api/get-info/)، [مالی](https://docs.liara.ir/references/api/billing/). کپی مستندات و سورس CLI در بسته تحویل نیست؛ پیوندهای رسمی مرجع بررسی قرارداد هستند.
 
 ## پیش از اولین عملیات واقعی
 
