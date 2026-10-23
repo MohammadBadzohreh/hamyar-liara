@@ -680,6 +680,27 @@ main {
   flex-shrink: 0;
   width: 18px;
 }
+.price-card {
+  margin: 16px 0;
+  padding: 18px;
+  border: 1px solid #d5e9e6;
+  border-radius: 11px;
+  background: #f8fcfb;
+  font-size: 12px;
+  line-height: 1.8;
+}
+.price-heading, .price-card dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+.price-card p, .price-card small { color: #698188; }
+.price-card dl { margin: 13px 0; }
+.price-card dl > div { border-bottom: 1px solid #e4eeed; padding: 7px 0; }
+.price-card dt { color: #5b747b; }
+.price-card dd { margin: 0; font-weight: 600; white-space: nowrap; }
+.price-card .price-total { color: #087f83; font-size: 14px; border-bottom: 0; }
 .working {
   display: flex;
   gap: 8px;

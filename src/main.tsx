@@ -70,6 +70,7 @@ function Button({ variant = "default", className, children, ...p }: any) {
   );
 }
 const fa = (n: number) => new Intl.NumberFormat("fa-IR").format(n);
+const toman = (n: number) => `${fa(Math.round(n))} تومان`;
 const date = (n: number) =>
   new Date(n).toLocaleString("fa-IR", { hour: "2-digit", minute: "2-digit" });
 const states: Record<string, string> = {
@@ -92,6 +93,27 @@ function Badge({ children, tone = "" }: any) {
 }
 function Json({ data }: any) {
   return <pre className="code">{JSON.stringify(data, null, 2)}</pre>;
+}
+function PlanPrice({ plan, taxRate }: { plan: any; taxRate: number | null }) {
+  const valid = (n: unknown) => typeof n === "number" && Number.isFinite(n) && n >= 0;
+  const monthlyReady = valid(plan.resourceMonthly) && valid(plan.bundleMonthly);
+  const hourlyReady = valid(plan.resourceHourly) && valid(plan.bundleHourly);
+  const taxReady = valid(taxRate) && (taxRate as number) <= 1;
+  const monthlyBase = monthlyReady ? plan.resourceMonthly + plan.bundleMonthly : null;
+  const hourlyBase = hourlyReady ? plan.resourceHourly + plan.bundleHourly : null;
+  const bundleNames: Record<string, string> = { basic: "برنزی", standard: "نقره‌ای", pro: "طلایی" };
+  return <div className="price-card">
+    <div className="price-heading"><strong>برآورد پلن انتخاب‌شده</strong><Badge tone="amber">پیش از اجرا دوباره بررسی می‌شود</Badge></div>
+    <p>{plan.planID} · بسته {bundleNames[plan.bundlePlanID] || plan.bundlePlanID} · {plan.ram} RAM · {plan.cpu} CPU · {plan.disk} دیسک</p>
+    <dl>
+      <div><dt>منابع در ماه</dt><dd>{monthlyReady ? toman(plan.resourceMonthly) : "نامشخص"}</dd></div>
+      <div><dt>بسته امکانات در ماه</dt><dd>{monthlyReady ? toman(plan.bundleMonthly) : "نامشخص"}</dd></div>
+      <div><dt>جمع پایه ماهانه</dt><dd>{monthlyBase === null ? "نامشخص" : toman(monthlyBase)}</dd></div>
+      <div><dt>مالیات برآوردی</dt><dd>{taxReady && monthlyBase !== null ? `${fa(taxRate! * 100)}٪ · ${toman(monthlyBase * taxRate!)}` : "نامشخص"}</dd></div>
+      <div className="price-total"><dt>جمع برآوردی ماهانه با مالیات</dt><dd>{taxReady && monthlyBase !== null ? toman(monthlyBase * (1 + taxRate!)) : "نامشخص"}</dd></div>
+    </dl>
+    <small>نرخ ساعتی با مالیات: {taxReady && hourlyBase !== null ? `${toman(hourlyBase * (1 + taxRate!))} / ساعت` : "نامشخص"}. مبلغ ماهانه از قیمت نمایشی API و نرخ ساعتی از قیمت مصرفی API محاسبه شده‌اند؛ صورتحساب واقعی ممکن است متفاوت باشد.</small>
+  </div>;
 }
 function App() {
   const [session, setSession] = useState<any>(null),
@@ -781,8 +803,11 @@ function App() {
                         </option>
                       ))}
                     </select>
-                    {choice !== "" && (
-                      <Json data={account.choices[Number(choice)]} />
+                    {choice !== "" && account.choices?.[Number(choice)] && (
+                      <>
+                        <PlanPrice plan={account.choices[Number(choice)]} taxRate={status?.pricing?.taxRate ?? null} />
+                        <details><summary>جزئیات خام پلن</summary><Json data={account.choices[Number(choice)]} /></details>
+                      </>
                     )}
                     <details>
                       <summary>اطلاعات اتصال و محدودیت‌ها</summary>

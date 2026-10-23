@@ -111,6 +111,12 @@ app.get("/api/status", (_req, res) =>
       prices: process.env.LIARA_PRICE_SCHEMA_VERIFIED === "true",
     },
     source: "live-only",
+    pricing: {
+      taxRate: process.env.LIARA_TAX_RATE && Number.isFinite(Number(process.env.LIARA_TAX_RATE)) && Number(process.env.LIARA_TAX_RATE) >= 0 && Number(process.env.LIARA_TAX_RATE) <= 1
+        ? Number(process.env.LIARA_TAX_RATE)
+        : null,
+      taxSource: "برآورد نمایش‌داده‌شده در پنل لیارا؛ مبلغ نهایی با صورتحساب تعیین می‌شود.",
+    },
     limitations: [
       "اتصال پیکربندی‌شده به معنی تأیید عملی نیست.",
       ...(config.envMode === "unverified" ? ["تغییر env تا تأیید قرارداد واقعی API مسدود است."] : []),

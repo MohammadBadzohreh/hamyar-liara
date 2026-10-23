@@ -99,6 +99,7 @@ export function normalizePlans(plans: any) {
             cpu: p.CPU,
             disk: p.volume,
             resourceHourly: p.price,
+            resourceMonthly: p.displayPrice,
             bundleHourly: b.price,
             bundleMonthly: b.displayPrice,
             retentionDays: b.maxLogsRetention,
