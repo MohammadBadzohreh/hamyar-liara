@@ -41,11 +41,20 @@ let csrf = "";
 async function api(path: string, body?: any) {
   const r = await fetch("/api" + path, {
     method: body === undefined ? "GET" : "POST",
-    headers: { "Content-Type": "application/json", "X-CSRF-Token": csrf },
+    headers: {
+      Accept: "application/json",
+      ...(body === undefined ? {} : { "Content-Type": "application/json" }),
+      ...(csrf ? { "X-CSRF-Token": csrf } : {}),
+    },
     body: body === undefined ? undefined : JSON.stringify(body),
+    credentials: "include",
   });
-  const d = await r.json();
-  if (!r.ok) throw new Error(d.error || "اتصال برقرار نشد");
+  const d = (await r.json().catch(() => ({}))) as any;
+  if (r.status === 401) {
+    csrf = "";
+    throw new Error("نشست شما منقضی شده است؛ دوباره وارد شوید.");
+  }
+  if (!r.ok) throw new Error(d.error || `پاسخ نامعتبر از سرور (HTTP ${r.status})`);
   return d;
 }
 const buttonStyles = cva("btn", {
@@ -159,6 +168,8 @@ function App() {
     try {
       return await fn();
     } catch (e: any) {
+      if (/نشست.*منقضی|ابتدا وارد شوید/.test(String(e?.message)))
+        setSession({ authenticated: false, setupRequired: false });
       setError(e.message);
     } finally {
       setBusy("");
@@ -191,8 +202,16 @@ function App() {
   }, []);
   useEffect(() => {
     if (session?.authenticated) {
-      reload().catch((e) => setError(e.message));
-      const t = setInterval(() => reload().catch(() => {}), 10000);
+      reload().catch((e) => {
+        if (/نشست.*منقضی|ابتدا وارد شوید/.test(String(e?.message)))
+          setSession({ authenticated: false, setupRequired: false });
+        setError(e.message);
+      });
+      const t = setInterval(() =>
+        reload().catch((e) => {
+          if (/نشست.*منقضی|ابتدا وارد شوید/.test(String(e?.message)))
+            setSession({ authenticated: false, setupRequired: false });
+        }), 10000);
       return () => clearInterval(t);
     }
   }, [session?.authenticated, reload]);
