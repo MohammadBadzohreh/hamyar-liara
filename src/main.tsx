@@ -806,6 +806,18 @@ function App() {
                     {choice !== "" && account.choices?.[Number(choice)] && (
                       <>
                         <PlanPrice plan={account.choices[Number(choice)]} taxRate={status?.pricing?.taxRate ?? null} />
+                        {project?.app && (
+                          <>
+                            <Button
+                              variant="secondary"
+                              disabled={!!busy}
+                              onClick={() => proposal("resize", account.choices[Number(choice)])}
+                            >
+                              پیشنهاد تغییر منابع همین برنامه
+                            </Button>
+                            <p className="muted">تغییر منابع هزینه و احتمال وقفه دارد؛ ابتدا پیشنهاد ساخته می‌شود و فقط پس از تأیید شما به لیارا ارسال خواهد شد. بسته امکانات باید با بسته فعلی برنامه یکسان باشد.</p>
+                          </>
+                        )}
                         <details><summary>جزئیات خام پلن</summary><Json data={account.choices[Number(choice)]} /></details>
                       </>
                     )}
