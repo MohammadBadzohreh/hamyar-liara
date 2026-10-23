@@ -5,7 +5,7 @@ import { z } from "zod";
 import { config } from "./config.ts";
 import { token, hash, verifyPassword, redact } from "./security.ts";
 import { store, type Project, type Operation } from "./store.ts";
-import { account, evidence, liara } from "./liara.ts";
+import { account, evidence, liara, storageStatus } from "./liara.ts";
 import { probe } from "./probe.ts";
 import { recommendPlan } from "./recommendation.ts";
 import { recordHealth, claimIncident } from "./monitor-policy.ts";
@@ -129,6 +129,7 @@ app.get("/api/account", async (_req, res) => {
   const data = await account();
   res.json({ ...data, choices: normalizePlans(data.plans) });
 });
+app.get("/api/storage", async (_req, res) => res.json(await storageStatus()));
 app.get("/api/projects", (_req, res) => res.json(store.list("project")));
 app.post("/api/projects", (req, res) =>
   res.status(201).json(addProject(req.body)),

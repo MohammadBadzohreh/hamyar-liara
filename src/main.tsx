@@ -126,6 +126,7 @@ function App() {
     [ops, setOps] = useState<any[]>([]),
     [incidents, setIncidents] = useState<any[]>([]),
     [status, setStatus] = useState<any>(null),
+    [storage, setStorage] = useState<any>(null),
     [health, setHealth] = useState<any[]>([]),
     [account, setAccount] = useState<any>(null),
     [recommendation, setRecommendation] = useState<any>(null),
@@ -164,17 +165,19 @@ function App() {
     }
   };
   const reload = useCallback(async () => {
-    const [p, o, i, s, h] = await Promise.all([
+    const [p, o, i, s, st, h] = await Promise.all([
       api("/projects"),
       api("/operations"),
       api("/incidents"),
       api("/status"),
+      api("/storage"),
       api("/health"),
     ]);
     setProjects(p);
     setOps(o);
     setIncidents(i);
     setStatus(s);
+    setStorage(st);
     setHealth(h);
     setSelected((current) => current || p[0]?.id || "");
   }, []);
@@ -1304,6 +1307,40 @@ function App() {
                     source: account.source,
                   }}
                 />
+              )}
+              <hr />
+              <div className="section-title">
+                <h3>ذخیره‌سازی پایدار دستیار</h3>
+                <Badge tone={storage?.available ? "mint" : "amber"}>
+                  {storage?.available ? "دریافت زنده از لیارا" : "نامشخص"}
+                </Badge>
+              </div>
+              {storage?.available ? (
+                <div className="storage-summary">
+                  <p>
+                    برنامهٔ آنلاین <code>{storage.app}</code> روی پلن{" "}
+                    <code>{storage.planID}</code> /{" "}
+                    <code>{storage.bundlePlanID}</code> اجرا می‌شود.
+                  </p>
+                  <div className="storage-grid">
+                    {storage.disks?.map((disk: any) => {
+                      const mount = storage.mounts?.find((m: any) => m.name === disk.name);
+                      return (
+                        <div className="storage-item" key={disk.name}>
+                          <strong>{disk.name}</strong>
+                          <span>{disk.size} گیگابایت</span>
+                          <small>مسیر: {mount?.mountedTo || "نامشخص"}</small>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="notice">{storage.persistence}</div>
+                </div>
+              ) : (
+                <div className="notice">
+                  وضعیت دیسک پایدار از API لیارا دریافت نشد؛ دادهٔ ناموجود به‌صورت صفر نمایش داده نمی‌شود.
+                  {storage?.message ? " " + storage.message : ""}
+                </div>
               )}
               <hr />
               <h3>محدودیت‌های شفاف</h3>

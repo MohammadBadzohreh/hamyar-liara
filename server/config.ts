@@ -8,6 +8,7 @@ export const config = {
   ownerHash: process.env.OWNER_PASSWORD_HASH || "",
   liaraToken: process.env.LIARA_API_TOKEN || "",
   team: process.env.LIARA_TEAM_ID || "",
+  liaraApp: process.env.LIARA_APP_NAME || "",
   aiKey: process.env.AI_API_KEY || "",
   aiBase: process.env.AI_BASE_URL || "",
   aiModel: process.env.AI_MODEL || "google/gemini-2.5-flash",

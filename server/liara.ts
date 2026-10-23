@@ -58,6 +58,57 @@ export async function account() {
     checkedAt: Date.now(),
   };
 }
+
+/** Return only safe, user-facing storage facts for the configured assistant app. */
+export async function storageStatus() {
+  const app = config.liaraApp;
+  if (!app)
+    return {
+      available: false,
+      source: "not_configured",
+      message: "نام برنامهٔ آنلاین دستیار تنظیم نشده است.",
+    };
+  try {
+    const details = await liara(`/v1/projects/${encodeURIComponent(app)}`);
+    const project = details?.project;
+    const id = project?._id;
+    if (!id)
+      return {
+        available: false,
+        source: "live",
+        app,
+        message: "شناسهٔ برنامه برای خواندن دیسک دریافت نشد.",
+      };
+    const disks = await liara(`/v1/projects/${encodeURIComponent(id)}/disks`);
+    return {
+      available: true,
+      source: "live",
+      app,
+      planID: project.planID,
+      bundlePlanID: project.bundlePlanID,
+      dataDir: process.env.DATA_DIR || config.dataDir,
+      disks: Array.isArray(disks?.disks)
+        ? disks.disks.map((d: any) => ({
+            name: d.name,
+            size: d.size,
+            createdAt: d.createdAt,
+            updatedAt: d.updatedAt,
+          }))
+        : [],
+      mounts: Array.isArray(disks?.mounts)
+        ? disks.mounts.map((m: any) => ({ name: m.name, mountedTo: m.mountedTo }))
+        : [],
+      persistence: "دادهٔ برنامه پس از restart روی دیسک پایدار نگه‌داری می‌شود.",
+    };
+  } catch (error: any) {
+    return {
+      available: false,
+      source: "live",
+      app,
+      message: redact(error?.message || "خواندن دیسک ناموفق بود."),
+    };
+  }
+}
 export async function evidence(app: string, start?: number) {
   const n = encodeURIComponent(app),
     since = start ?? Math.floor(Date.now() / 1000) - 900;

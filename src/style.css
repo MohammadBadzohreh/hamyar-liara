@@ -676,6 +676,40 @@ main {
   margin: 15px 0;
   color: #5c7c7c;
 }
+.storage-summary p {
+  margin-bottom: 12px;
+}
+.storage-summary code {
+  direction: ltr;
+  unicode-bidi: plaintext;
+  color: #245962;
+  background: #eef7f6;
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+.storage-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px;
+  margin: 12px 0;
+}
+.storage-item {
+  display: grid;
+  gap: 5px;
+  background: #f7fafb;
+  border: 1px solid #e5edef;
+  border-radius: 8px;
+  padding: 12px;
+}
+.storage-item span {
+  color: #087f83;
+  font-weight: 700;
+}
+.storage-item small {
+  color: #71858b;
+  direction: ltr;
+  text-align: right;
+}
 .notice svg {
   flex-shrink: 0;
   width: 18px;
