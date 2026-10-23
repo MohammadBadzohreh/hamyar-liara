@@ -1,6 +1,10 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {summarizeEvidence} from '../server/evidence-summary.ts';
+test('user selected units retain their unverified provenance in model evidence',()=>{
+  const units={cpu:'percent',memory:'bytes',source:'user-assumption',verified:false};
+  assert.deepEqual(summarizeEvidence({units}).units,units);
+});
 test('current request evidence survives historical log flooding and unknown units stay unknown', () => {
   const values = Array.from({length:1000},(_,i)=>[String(10000+i),JSON.stringify({_entry:'historical noise '+i})]);
   values.unshift(['1',JSON.stringify({_entry:'request-specific TypeError request-123'})]);

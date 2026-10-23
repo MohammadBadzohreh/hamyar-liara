@@ -1406,11 +1406,11 @@ function Evidence({ data }: any) {
         ],
         [
           "CPU",
-          data.cpu?.available ? "دریافت شد؛ واحد در شواهد" : "در دسترس نیست",
+          data.cpu?.available ? (data.units?.source === 'user-assumption' ? "درصد؛ فرض کاربر" : "دریافت شد؛ واحد در شواهد") : "در دسترس نیست",
         ],
         [
           "RAM",
-          data.memory?.available ? "دریافت شد؛ واحد در شواهد" : "در دسترس نیست",
+          data.memory?.available ? (data.units?.source === 'user-assumption' ? "بایت؛ فرض کاربر" : "دریافت شد؛ واحد در شواهد") : "در دسترس نیست",
         ],
       ].map(([k, v]) => (
         <div key={k}>

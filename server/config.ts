@@ -19,6 +19,7 @@ export const config = {
   envMode: process.env.LIARA_ENV_UPDATE_MODE || "unverified",
   metricCpuUnit: process.env.LIARA_CPU_UNIT || "unknown",
   metricMemoryUnit: process.env.LIARA_MEMORY_UNIT || "unknown",
+  metricUnitSource: process.env.LIARA_METRIC_UNIT_SOURCE || "unverified",
 };
 export function requireConfig(value: string, name: string) {
   if (!value) throw new Error(`اتصال ${name} هنوز تنظیم نشده است.`);

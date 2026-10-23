@@ -674,8 +674,8 @@ async function collectIncident(
     method,
     body,
     source: "live",
-    evidence: redact({ http, ...ev, units: { cpu: config.metricCpuUnit, memory: config.metricMemoryUnit } }),
-    units: { cpu: config.metricCpuUnit, memory: config.metricMemoryUnit },
+    evidence: redact({ http, ...ev, units: { cpu: config.metricCpuUnit, memory: config.metricMemoryUnit, source: config.metricUnitSource, verified: config.metricUnitSource === 'provider-confirmed' } }),
+    units: { cpu: config.metricCpuUnit, memory: config.metricMemoryUnit, source: config.metricUnitSource, verified: config.metricUnitSource === 'provider-confirmed' },
     status: "collected",
   };
   try {
